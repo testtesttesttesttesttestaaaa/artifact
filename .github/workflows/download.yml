@@ -21,15 +21,39 @@ jobs:
         - name: Build executable
           run: |
             pyinstaller main.py --onefile -w
+            
+        - name: Archive output content
+          uses: thedoctor0/zip-release@master
+          with:
+            filename: output.zip
+            directory: dist/
+            
         - uses: actions/upload-artifact@v3
           with:
             name: ${{ matrix.os }}
-            path: dist/
+            path: dist/*.zip
+            
   distribute-project:
     name: Distribute project to GitHub Releases
     runs-on: ubuntu-latest
     needs: build-project
     steps:
-        - uses: actions/download-artifact@v3
-        - name: Display structure of downloaded files
-          run: ls -R
+      - uses: actions/download-artifact@v3
+          
+      - name: Create GitHub release
+        id: create-new-release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ github.run_number }}
+          release_name: Release ${{ github.run_number }}
+      - name: Upload asset to GitHub release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+        with:
+          upload_url: ${{ steps.create-new-release.outputs.upload_url }}
+          asset_path: ./site.zip
+          asset_name: site-v${{ github.run_number }}.zip
+          asset_content_type: application/zip  
