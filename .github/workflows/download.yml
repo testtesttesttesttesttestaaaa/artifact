@@ -25,11 +25,11 @@ jobs:
           with:
             name: ${{ matrix.os }}
             path: dist/
-          distribute-project:
+  distribute-project:
     name: Distribute project to GitHub Releases
     runs-on: ubuntu-latest
     needs: build-project
+    steps:
         - uses: actions/download-artifact@v3
-
         - name: Display structure of downloaded files
           run: ls -R
