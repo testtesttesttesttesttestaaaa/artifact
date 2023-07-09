@@ -4,8 +4,8 @@ jobs:
   build-project:
       strategy:
         matrix:
-          os: [windows-latest, macos-latest]
-          architecture: ['x64', 'arm64']
+          os: [windows-latest]
+          architecture: ['x64', 'x86']
       runs-on: ${{ matrix.os }}
       steps:
         - name: Checkout code
