@@ -1,0 +1,36 @@
+name: Main
+on: workflow_dispatch
+jobs:
+  build-project:
+      strategy:
+        matrix:
+          os: [windows-latest,'macos-latest/x64']
+          architecture: ['x64', 'x86']
+      runs-on: ${{ matrix.os }}
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v3
+
+        - name: Set up Python
+          uses: actions/setup-python@v4
+          with:
+            python-version: 3.x
+            architecture: ${{ matrix.architecture }}
+
+        - name: Install PyInstaller
+          run: |
+            pip install pyinstaller
+        - name: Build executable
+          run: |
+            pyinstaller main.py --onefile -w
+            
+        - name: Archive output content
+          uses: thedoctor0/zip-release@master
+          with:
+            filename: output.zip
+            directory: dist/
+            
+        - uses: actions/upload-artifact@v3
+          with:
+            name: ${{ matrix.os }}-${{ matrix.architecture }}
+            path: dist/*.zip
