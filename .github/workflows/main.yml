@@ -1,7 +1,8 @@
 name: Main
 on: workflow_dispatch
 jobs:
-  build-project:
+
+  windows:
       strategy:
         matrix:
           os: [windows-latest]
@@ -34,11 +35,80 @@ jobs:
           with:
             name: ${{ matrix.os }}-${{ matrix.architecture }}
             path: dist/*.zip
+
+  ubuntu:
+      strategy:
+        matrix:
+          os: [ubuntu-latest]
+          architecture: ['x64', 'x86']
+      runs-on: ${{ matrix.os }}
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v3
+
+        - name: Set up Python
+          uses: actions/setup-python@v4
+          with:
+            python-version: 3.x
+            architecture: ${{ matrix.architecture }}
+
+        - name: Install PyInstaller
+          run: |
+            pip install pyinstaller
+        - name: Build executable
+          run: |
+            pyinstaller main.py --onefile -w
+            
+        - name: Archive output content
+          uses: thedoctor0/zip-release@master
+          with:
+            filename: output.zip
+            directory: dist/
+            
+        - uses: actions/upload-artifact@v3
+          with:
+            name: ${{ matrix.os }}-${{ matrix.architecture }}
+            path: dist/*.zip
+            
+    
+  mac:
+      strategy:
+        matrix:
+          os: [macos-latest]
+          architecture: ['x64', 'arm64']
+      runs-on: ${{ matrix.os }}
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v3
+
+        - name: Set up Python
+          uses: actions/setup-python@v4
+          with:
+            python-version: 3.x
+            architecture: ${{ matrix.architecture }}
+
+        - name: Install PyInstaller
+          run: |
+            pip install pyinstaller
+        - name: Build executable
+          run: |
+            pyinstaller main.py --onefile -w
+            
+        - name: Archive output content
+          uses: thedoctor0/zip-release@master
+          with:
+            filename: output.zip
+            directory: dist/
+            
+        - uses: actions/upload-artifact@v3
+          with:
+            name: ${{ matrix.os }}-${{ matrix.architecture }}
+            path: dist/*.zip
             
   distribute-project:
     name: Distribute project to GitHub Releases
     runs-on: ubuntu-latest
-    needs: build-project
+    needs: [ ubuntu, windows, mac ]
     steps:
       - uses: actions/download-artifact@v3
       
@@ -50,7 +120,9 @@ jobs:
         with:
           tag_name: v${{ github.run_number }}
           release_name: Release ${{ github.run_number }}
-          
+      - name: Show Dir
+        run: |
+          ls -R
       - name: Upload ubuntu asset to GitHub release
         uses: actions/upload-release-asset@v1
         env:
