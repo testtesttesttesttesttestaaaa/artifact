@@ -48,12 +48,12 @@ jobs:
         with:
           tag_name: v${{ github.run_number }}
           release_name: Release ${{ github.run_number }}
-      - name: Upload asset to GitHub release
+      - name: Upload ubuntu asset to GitHub release
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
         with:
           upload_url: ${{ steps.create-new-release.outputs.upload_url }}
-          asset_path: ./site.zip
+          asset_path: ./ubuntu-latest.zip
           asset_name: site-v${{ github.run_number }}.zip
           asset_content_type: application/zip  
