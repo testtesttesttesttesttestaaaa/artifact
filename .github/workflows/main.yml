@@ -56,6 +56,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
         with:
           upload_url: ${{ steps.create-new-release.outputs.upload_url }}
-          asset_path: ubuntu-latest
+          asset_path: ./ubuntu-latest/output.zip
           asset_name: site-v${{ github.run_number }}.zip
           asset_content_type: application/zip  
