@@ -40,7 +40,7 @@ jobs:
       strategy:
         matrix:
           os: [ubuntu-latest]
-          architecture: ['x64', 'x86']
+          architecture: ['x64']
       runs-on: ${{ matrix.os }}
       steps:
         - name: Checkout code
