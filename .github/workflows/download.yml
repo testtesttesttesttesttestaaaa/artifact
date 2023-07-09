@@ -33,7 +33,7 @@ jobs:
             
         - uses: actions/upload-artifact@v3
           with:
-            name: ${{ matrix.os }}-${{ matrix.arch }}
+            name: ${{ matrix.os }}-${{ matrix.architecture }}
             path: dist/*.zip
             
   distribute-project:
