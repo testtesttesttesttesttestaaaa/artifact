@@ -1,4 +1,4 @@
-name: Main
+name: OS
 on: workflow_dispatch
 jobs:
   build-project:
