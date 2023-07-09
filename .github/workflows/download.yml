@@ -5,6 +5,7 @@ jobs:
       strategy:
         matrix:
           os: [ubuntu-latest, windows-latest, macos-latest]
+          platform: [ubuntu-latest, windows-latest, macos-latest]
       runs-on: ${{ matrix.os }}
       steps:
         - name: Checkout code
@@ -30,7 +31,7 @@ jobs:
             
         - uses: actions/upload-artifact@v3
           with:
-            name: ${{ matrix.os }}
+            name: ${{ matrix.platform }}
             path: dist/*.zip
             
   distribute-project:
