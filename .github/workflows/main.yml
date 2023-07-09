@@ -4,7 +4,7 @@ jobs:
   build-project:
       strategy:
         matrix:
-          os: [macos-latest]
+          os: [windows-latest, macos-latest]
           architecture: ['x64', 'arm64']
       runs-on: ${{ matrix.os }}
       steps:
