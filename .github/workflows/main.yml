@@ -75,7 +75,7 @@ jobs:
       strategy:
         matrix:
           os: [macos-latest]
-          architecture: ['x64', 'arm64']
+          architecture: ['arm64']
       runs-on: ${{ matrix.os }}
       steps:
         - name: Checkout code
