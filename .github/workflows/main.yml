@@ -76,7 +76,7 @@ jobs:
         matrix:
           os: [macos-latest]
           architecture: ['arm64']
-      runs-on: macos-arm64
+      runs-on: osx-arm64
       steps:
         - name: Checkout code
           uses: actions/checkout@v3
